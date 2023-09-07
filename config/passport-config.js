@@ -20,7 +20,7 @@ passport.use('local-with-bcrypt', new LocalStrategy(
 ));
 
 passport.serializeUser(function(user, done) {
-  console.log("serializeUser")
+  console.log('serializeUser')
 
   done(null, user.id);
 });

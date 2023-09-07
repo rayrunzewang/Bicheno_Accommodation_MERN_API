@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const passport = require('./config/passport-config')
 
 const User = require('./models/User');
+const Contact = require('./models/Contact')
 const { generateHash } = require('./utils/authUtils');
 
 const app = express();
@@ -90,8 +91,8 @@ app.post('/login', (req, res, next) => {
             res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // 允许的来源
             res.header('Access-Control-Allow-Credentials', 'true'); // 允许发送凭据
             res.header(
-                "Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept"
+                'Access-Control-Allow-Headers',
+                'Origin, X-Requested-With, Content-Type, Accept'
             );
             return res.json({ message: 'Login successful', user: user });
         });
@@ -100,6 +101,49 @@ app.post('/login', (req, res, next) => {
 
 });
 
+// 获取公司信息
+app.get('/contact', async (req, res) => {
+  try {
+    const contact = await Contact.findOne();
+    res.json(contact);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to retrieve company information.' });
+  }
+});
+
+// 更新或创建公司信息
+app.post('/contact', async (req, res) => {
+  const { phoneNumber, alternativePhoneNumber, email, address } = req.body;
+  try {
+    // 检查是否已存在公司信息
+    let contact = await Contact.findOne();
+
+    if (!contact) {
+      // 如果不存在，则创建新的公司信息
+      contact = new Contact({
+        phoneNumber,
+        alternativePhoneNumber,
+        email,
+        address,
+      });
+    } else {
+      // 如果存在，则更新现有的公司信息
+      contact.phoneNumber = phoneNumber;
+      contact.alternativePhoneNumber = alternativePhoneNumber;
+      contact.email = email;
+      contact.address = address;
+    }
+
+    // 保存到数据库
+    await contact.save();
+    res.json({ message: 'Contact information has been updated' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Contact information update was not successful.' });
+  }
+});
+  
 app.get('/check-session', (req, res) => {
     try {
         console.log('req.session/check-session:', req.session);
@@ -109,8 +153,8 @@ app.get('/check-session', (req, res) => {
             res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // 允许的来源
             res.header('Access-Control-Allow-Credentials', 'true'); // 允许发送凭据
             res.header(
-                "Access-Control-Allow-Headers",
-                "Origin, X-Requested-With, Content-Type, Accept"
+                'Access-Control-Allow-Headers',
+                'Origin, X-Requested-With, Content-Type, Accept'
             );
             if (req.session.passport.user) {
                 res.json({ user: req.session.passport.user });
@@ -132,8 +176,8 @@ app.post('/logout', (req, res) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
     );
 
     req.session.destroy();
