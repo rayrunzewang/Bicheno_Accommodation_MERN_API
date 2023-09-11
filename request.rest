@@ -26,3 +26,36 @@ Content-Type: application/json
 ###
 GET http://localhost:3001/contact
 Content-Type: application/json
+
+###
+POST http://localhost:3001/posts
+Content-Type: application/json
+
+{
+  "title": "title-3",
+  "content": "StringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringStringString",
+  "author": "Author3"
+}
+### 获取全部Blog List
+GET http://localhost:3001/posts
+Content-Type: application/json
+
+###
+GET http://localhost:3001/posts/
+Content-Type: application/json
+
+###
+Delete http://localhost:3001/posts/
+Content-Type: application/json
+
+###
+PUT http://localhost:3001/posts/
+Content-Type: application/json
+
+{
+    "title": "title-1",
+    "content": "内容",
+    "author": "Author-1"
+}
+
+

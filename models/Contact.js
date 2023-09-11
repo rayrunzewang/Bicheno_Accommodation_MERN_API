@@ -18,6 +18,15 @@ const contactSchema = new mongoose.Schema({
     },
   },
   address: String,
+  
+  facebookURL: {
+    type: String,
+    required: true,
+  },
+  instagramURL: {
+    type: String,
+    required: true,
+  },
 
 });
 
