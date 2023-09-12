@@ -50,4 +50,35 @@ const storage = multer.diskStorage({
     }
   });
 
+  router.get('/:id', async (req, res) => {
+    try {
+      const fileId = req.params.id;
+      const file = await File.findById(fileId);
+      
+      if (!file) {
+        return res.status(404).json({ message: 'Document not found' });
+      }
+      
+      res.json({ document: file });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to retrieve document' });
+    }
+  });
+
+  router.get('/', async (req, res) => {
+    try {
+      const files = await File.find();
+      
+      if (!files || files.length === 0) {
+        return res.status(404).json({ message: 'No documents found' });
+      }
+      
+      res.json(files);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Failed to retrieve documents' });
+    }
+  });
+
   module.exports = router;

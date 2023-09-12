@@ -52,7 +52,7 @@ app.use('/contact', contactRoutes);
 app.use('/posts', blogPostRoutes);
 app.use('/check-session', sessionRoutes);
 app.use('/logout', sessionRoutes);
-app.use('/upload', imagesRoutes);
+app.use('/property', imagesRoutes);
 
 
 

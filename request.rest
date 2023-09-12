@@ -57,5 +57,10 @@ Content-Type: application/json
     "content": "内容",
     "author": "Author-1"
 }
+###
+GET http://localhost:3001/property/
+Content-Type: application/json
+
+
 
 
