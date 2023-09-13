@@ -60,7 +60,9 @@ Content-Type: application/json
 ###
 GET http://localhost:3001/property/
 Content-Type: application/json
-
+###
+GET http://localhost:3001/property/64fef21ea3e0b823be8550b4
+Content-Type: application/json
 
 
 

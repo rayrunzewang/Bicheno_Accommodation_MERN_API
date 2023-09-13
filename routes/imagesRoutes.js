@@ -31,14 +31,21 @@ const storage = multer.diskStorage({
       const newFile = new File({
         title: req.body.title,
         description: req.body.description,
+        bed: req.body.bed,
+        toliet: req.body.toliet,
+        carspace: req.body.carspace,
       }); 
   
+      let order = 1; 
+
       for (const file of uploadedFiles) {
         newFile.images.push({
           image_name: file.filename,
           image_url: file.path,
+          order: order,
         });
         filePaths.push(file.path);
+        order++; 
       }
   
       await newFile.save(); 
