@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('./config/passport-config')
 const app = express();
+const path = require('path');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
   useNewUrlParser: true,
@@ -15,12 +16,14 @@ mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
 })
   .then(() => console.log('connected to DB'))
   .catch(console.error);
-
+  
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true,
   allowedHeaders: ['Content-Type'], // this is needed for sending JSON
 }));
+
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -45,7 +48,6 @@ const blogPostRoutes = require('./routes/blogPostRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const imagesRoutes = require('./routes/imagesRoutes');
 
-
 app.use('/register', authRoutes);
 app.use('/login', authRoutes);
 app.use('/contact', contactRoutes);
@@ -54,8 +56,7 @@ app.use('/check-session', sessionRoutes);
 app.use('/logout', sessionRoutes);
 app.use('/property', imagesRoutes);
 
-
-
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use(express.static('uploads'));
 
 app.listen(port, () => console.log('Server started on port 3001'))
