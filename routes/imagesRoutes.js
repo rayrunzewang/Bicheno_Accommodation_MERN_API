@@ -3,6 +3,7 @@ const app = express();
 const router = express.Router();
 const multer = require('multer');
 const File = require('../models/File')
+const fs = require('fs');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -142,15 +143,25 @@ router.put('/:id', upload.array('file'), async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-  const deleteFiles = await File.findById(req.params.id);
+  const fileId = req.params.id;
   try {
-    if (!deleteFiles) {
-      return res.status(404).json({ error: 'Todo not found' });
+    const fileToDelete = await File.findById(fileId);
+
+    if (!fileToDelete) {
+      return res.status(404).json({ error: 'file not found' });
     }
-    const result = await File.findByIdAndDelete(req.params.id);
+
+    // delete image
+    for (const image of fileToDelete.images) {
+      const imagePath = image.image_url;
+      fs.unlinkSync(imagePath);
+    }
+
+    // delete data from database
+    const result = await File.findByIdAndDelete(fileId);
     res.json(result);
   } catch (error) {
-    console.error('Error deleting property:', error);
+    console.error('Cannot Delete Files', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
