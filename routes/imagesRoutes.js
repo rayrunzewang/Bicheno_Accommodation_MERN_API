@@ -110,6 +110,12 @@ router.put('/:id', upload.array('file'), async (req, res) => {
       return res.status(400).send('No File Chosen.');
     }
 
+     // Delete old images
+     for (const image of fileToUpdate.images) {
+      const imagePath = image.image_url;
+      fs.unlinkSync(imagePath);
+    }
+
     const uploadedFiles = req.files;
 
     // Update file properties
