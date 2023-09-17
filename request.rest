@@ -64,5 +64,32 @@ Content-Type: application/json
 GET http://localhost:3001/property/64fef21ea3e0b823be8550b4
 Content-Type: application/json
 
+###
+PUT GET http://localhost:3001/property/650444314cf3933d8ffdff2b
+Content-Type: application/json
 
+{
+        "_id": "650444314cf3933d8ffdff2b",
+        "title": "1",
+        "address": "1",
+        "description": "1",
+        "bed": 1,
+        "toliet": 1,
+        "carspace": 1,
+        "images": [
+            {
+                "image_name": "1694778417251-994015371.jpg",
+                "image_url": "uploads\\1694778417251-994015371.jpg",
+                "order": 1,
+                "_id": "650444314cf3933d8ffdff2c"
+            },
+            {
+                "image_name": "1694778417263-5556153462.jpg",
+                "image_url": "uploads\\1694778417263-5556153462.jpg",
+                "order": 2,
+                "_id": "650444314cf3933d8ffdff2d"
+            }
+        ],
+        "__v": 0
+    },
 

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const fileSchema = mongoose.Schema({
     title: String,
+    address: String,
     description: String,
     bed:Number,
     toliet:Number,

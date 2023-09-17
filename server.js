@@ -23,8 +23,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type'], // this is needed for sending JSON
 }));
 
-
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -57,6 +55,5 @@ app.use('/logout', sessionRoutes);
 app.use('/property', imagesRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-// app.use(express.static('uploads'));
 
 app.listen(port, () => console.log('Server started on port 3001'))
