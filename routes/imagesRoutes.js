@@ -157,13 +157,47 @@ router.put('/:id', upload.array('file'), async (req, res) => {
 
     // Clear existing images and add new ones
     fileToUpdate.images = [];
+    // for (const file of uploadedFiles) {
+    //   fileToUpdate.images.push({
+    //     image_name: file.filename,
+    //     image_url: file.path,
+    //     order: order,
+    //   });
+    //   order++;
+    // }
+
+    // let order = 1;
+
     for (const file of uploadedFiles) {
-      fileToUpdate.images.push({
-        image_name: file.filename,
-        image_url: file.path,
-        order: order,
-      });
+      let fileSizeInBytes = fs.statSync(file.path).size;
+      if (fileSizeInBytes < 200 * 1024) {
+        fileToUpdate.images.push({
+          image_name: file.filename,
+          image_url: file.path,
+          order: order,
+          fileSizeInBytes: fileSizeInBytes,
+        });
+
+      } else {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const folder = 'uploads'
+        const adjustedImagePath = 'adj' + uniqueSuffix + '.jpg';
+        await sharp(file.path).resize(1024, null).toFile(folder +'\\'+ adjustedImagePath);
+        console.log(`folder +'\\'+ adjustedImagePath:`, folder +'\\'+ adjustedImagePath)
+
+        fs.unlinkSync(file.path)
+        fileSizeInBytes = fs.statSync(folder +'\\'+ adjustedImagePath).size;
+        console.log('fileSizeInBytes', fileSizeInBytes)
+        fileToUpdate.images.push({
+          image_name: file.filename,
+          image_url: folder +'\\'+ adjustedImagePath,
+          order: order,
+          fileSizeInBytes: fileSizeInBytes,
+        });
+
+      }
       order++;
+
     }
 
     await fileToUpdate.save();
