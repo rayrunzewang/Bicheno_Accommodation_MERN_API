@@ -4,6 +4,9 @@ const router = express.Router();
 const multer = require('multer');
 const File = require('../models/File')
 const fs = require('fs');
+const sharp = require('sharp');
+const path = require('path');
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -47,13 +50,37 @@ router.post('/', upload.array('file'), async (req, res) => {
     let order = 1;
 
     for (const file of uploadedFiles) {
-      newFile.images.push({
-        image_name: file.filename,
-        image_url: file.path,
-        order: order,
-      });
-      filePaths.push(file.path);
+      let fileSizeInBytes = fs.statSync(file.path).size;
+      if (fileSizeInBytes < 200 * 1024) {
+        newFile.images.push({
+          image_name: file.filename,
+          image_url: file.path,
+          order: order,
+          fileSizeInBytes: fileSizeInBytes,
+        });
+        filePaths.push(file.path);
+
+      } else {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const folder = 'uploads'
+        const adjustedImagePath = 'adj' + uniqueSuffix + '.jpg';
+        await sharp(file.path).resize(1024, null).toFile(folder +'\\'+ adjustedImagePath);
+        console.log(`folder +'\\'+ adjustedImagePath:`, folder +'\\'+ adjustedImagePath)
+
+        fs.unlinkSync(file.path)
+        fileSizeInBytes = fs.statSync(folder +'\\'+ adjustedImagePath).size;
+        console.log('fileSizeInBytes', fileSizeInBytes)
+        newFile.images.push({
+          image_name: file.filename,
+          image_url: folder +'\\'+ adjustedImagePath,
+          order: order,
+          fileSizeInBytes: fileSizeInBytes,
+        });
+        filePaths.push(folder +'\\'+ adjustedImagePath);
+
+      }
       order++;
+
     }
 
     await newFile.save();
@@ -110,8 +137,8 @@ router.put('/:id', upload.array('file'), async (req, res) => {
       return res.status(400).send('No File Chosen.');
     }
 
-     // Delete old images
-     for (const image of fileToUpdate.images) {
+    // Delete old images
+    for (const image of fileToUpdate.images) {
       const imagePath = image.image_url;
       fs.unlinkSync(imagePath);
     }
