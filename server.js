@@ -48,6 +48,7 @@ const imagesRoutes = require('./routes/imagesRoutes');
 
 app.use('/register', authRoutes);
 app.use('/login', authRoutes);
+app.use('/change-password', authRoutes);
 app.use('/contact', contactRoutes);
 app.use('/posts', blogPostRoutes);
 app.use('/check-session', sessionRoutes);
