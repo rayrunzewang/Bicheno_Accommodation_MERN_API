@@ -5,7 +5,10 @@ const contactSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  alternativePhoneNumber: String,
+  alternativePhoneNumber: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -17,7 +20,10 @@ const contactSchema = new mongoose.Schema({
       message: 'Please enter a valid email address.',
     },
   },
-  address: String,
+  address: {
+    type: String,
+    required: true,
+  },
   
   facebookURL: {
     type: String,

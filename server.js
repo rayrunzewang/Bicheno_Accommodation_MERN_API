@@ -31,7 +31,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 2 * 30 * 24 * 60 * 60 * 1000,
+    maxAge: 5 * 60 * 1000,
     httpOnly: true,
     secure: false
   },
@@ -56,5 +56,10 @@ app.use('/logout', sessionRoutes);
 app.use('/property', imagesRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use((err, req, res, next) => {
+  console.error('An error occurred:', err);
+  res.status(500).json({ error: 'Something went wrong on the server.' });
+});
 
 app.listen(port, () => console.log('Server started on port 3001'))

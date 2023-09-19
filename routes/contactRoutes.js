@@ -14,13 +14,14 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const { phoneNumber, alternativePhoneNumber, email, address, facebookURL, instagramURL } = req.body;
+    const altPhoneNumber = alternativePhoneNumber || '';
     try {
         let contact = await Contact.findOne();
 
         if (!contact) {
             contact = new Contact({
                 phoneNumber,
-                alternativePhoneNumber,
+                alternativePhoneNumber: altPhoneNumber,
                 email,
                 address,
                 facebookURL,
@@ -30,7 +31,7 @@ router.post('/', async (req, res) => {
 
         } else {
             contact.phoneNumber = phoneNumber;
-            contact.alternativePhoneNumber = alternativePhoneNumber;
+            contact.alternativePhoneNumber = altPhoneNumber;
             contact.email = email;
             contact.address = address;
             contact.facebookURL = facebookURL;

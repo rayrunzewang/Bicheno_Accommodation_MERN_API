@@ -3,7 +3,25 @@ const router = express.Router();
 const passport = require('../config/passport-config');
 const { generateHash } = require('../utils/authUtils');
 const User = require('../models/User');
+const fs = require('fs');
 
+function logLoginAttempt(username, success, ipAddress, userAgent, errorMessage) {
+    const logEntry = {
+        timestamp: new Date().toISOString(),
+        username: username,
+        success: success,
+        ipAddress: ipAddress,
+        userAgent: userAgent,
+        errorMessage: errorMessage
+    };
+
+    const logFilePath = 'login_log.txt';
+
+    // Append the log entry to the log file
+    fs.appendFileSync(logFilePath, JSON.stringify(logEntry) + '\n');
+}
+
+/* ------ register router ------ */
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -24,37 +42,50 @@ router.post('/register', async (req, res) => {
     }
 });
 
+/* ------ login router ------ */
 router.post('/', (req, res, next) => {
-    passport.authenticate('local-with-bcrypt', (err, user, info) => {
-        if (err) {
-            console.error('Login failed:', err);
-            return res.status(500).json({ error: 'Login failed' });
-        }
-        if (!user) {
-            return res.status(400).json({ error: info.message });
-        }
-        req.session.user = user;
-        req.login(user, (err) => {
+    try {
+        passport.authenticate('local-with-bcrypt', (err, user, info) => {
             if (err) {
                 console.error('Login failed:', err);
+                logLoginAttempt('unknown', false, req.ip, req.get('user-agent'), err.message);
                 return res.status(500).json({ error: 'Login failed' });
             }
-            res.cookie('user_id', user._id, { maxAge: 2 * 30 * 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); 
-            res.header('Access-Control-Allow-Credentials', 'true'); 
-            res.header(
-                'Access-Control-Allow-Headers',
-                'Origin, X-Requested-With, Content-Type, Accept'
-            );
-            return res.json({ message: 'Login successful', user: user });
-        });
-    })(req, res, next);
+            if (!user) {
+                logLoginAttempt('unknown', false, req.ip, req.get('user-agent'), 'Invalid username or password.');
+                return res.status(400).json({ error: 'Invalid username or password.' });
+            }
+            req.session.user = user;
+            req.login(user, (err) => {
+                if (err) {
+                    console.error('Login failed:', err);
+                    logLoginAttempt(user.username, false, req.ip, req.get('user-agent'), err.message);
+
+                    return res.status(500).json({ error: 'Login failed' });
+                }
+                res.cookie('user_id', user._id, { maxAge: 5 * 60 * 1000, httpOnly: true, secure: false });
+                res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+                // res.header('Access-Control-Allow-Credentials', 'true'); 
+                res.header(
+                    'Access-Control-Allow-Headers',
+                    'Origin, X-Requested-With, Content-Type, Accept'
+                );
+                logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
+
+                return res.json({ message: 'Login successful', user: user });
+            });
+        })(req, res, next);
+    } catch (error) {
+        console.error('An unexpected error occurred:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    }
 });
 
+/* ------ Change Password Router ------ */
 router.put('/', async (req, res) => {
     try {
         const { username, oldPassword, newPassword } = req.body;
-        
+
         // Check if the new password meets the requirements
         // if (!passwordSchema.validate(newPassword)) {
         //     return res.status(400).json({ error: 'New password does not meet requirements.' });

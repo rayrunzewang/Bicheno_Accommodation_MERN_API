@@ -11,8 +11,8 @@ Content-Type: application/json
 
 {
   "username": "username",
-  "oldPassword": "password",
-  "newPassword": "password1"
+  "oldPassword": "password1",
+  "newPassword": "password"
 }
 ###
 GET http://localhost:3001/check-session

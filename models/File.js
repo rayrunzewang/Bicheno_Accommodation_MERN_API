@@ -1,17 +1,44 @@
 const mongoose = require('mongoose');
 
 const fileSchema = mongoose.Schema({
-    title: String,
-    address: String,
-    description: String,
-    bed:Number,
-    toliet:Number,
-    carspace: Number,
+    title: {
+        type: String,
+        required: true,
+    },
+    address: {
+        type: String,
+        required: true,
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    bed: {
+        type: Number,
+        required: true,
+    },
+    toliet: {
+        type: Number,
+        required: true,
+    },
+    carspace: {
+        type: Number,
+        required: true,
+    },
     images: [
         {
-            image_name: String,
-            image_url: String,
-            order:Number,
+            image_name: {
+                type: String,
+                required: true,
+            },
+            image_url: {
+                type: String,
+                required: true,
+            },
+            order: {
+                type: Number,
+                required: true,
+            },
         },
     ],
 });
