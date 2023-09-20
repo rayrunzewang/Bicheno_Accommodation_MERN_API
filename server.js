@@ -9,6 +9,7 @@ const session = require('express-session');
 const passport = require('./config/passport-config')
 const app = express();
 const path = require('path');
+const bodyParser = require('body-parser');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
   useNewUrlParser: true,
@@ -45,6 +46,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const blogPostRoutes = require('./routes/blogPostRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const imagesRoutes = require('./routes/imagesRoutes');
+const emailRoutes = require('./routes/emailRoutes'); 
 
 app.use('/register', authRoutes);
 app.use('/login', authRoutes);
@@ -54,8 +56,14 @@ app.use('/posts', blogPostRoutes);
 app.use('/check-session', sessionRoutes);
 app.use('/logout', sessionRoutes);
 app.use('/property', imagesRoutes);
-
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+app.use(bodyParser.json());
+app.use('/send-email', emailRoutes);
+
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Route not found' });
+});
 
 app.use((err, req, res, next) => {
   console.error('An error occurred:', err);
