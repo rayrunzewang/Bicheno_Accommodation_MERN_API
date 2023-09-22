@@ -5,6 +5,8 @@ const { generateHash } = require('../utils/authUtils');
 const User = require('../models/User');
 const fs = require('fs');
 
+
+/*------ logLoginAttempt ------*/
 function logLoginAttempt(username, success, ipAddress, userAgent, errorMessage) {
     const logEntry = {
         timestamp: new Date().toISOString(),
@@ -18,27 +20,51 @@ function logLoginAttempt(username, success, ipAddress, userAgent, errorMessage) 
     const logFilePath = 'login_log.txt';
 
     // Append the log entry to the log file
-    fs.appendFileSync(logFilePath, JSON.stringify(logEntry) + '\n');
+    try {
+        fs.appendFileSync(logFilePath, JSON.stringify(logEntry) + '\n');
+        console.log('Data appended to file.');
+    } catch (error) {
+        console.error('Error appending to file:', error.message);
+    }
 }
 
 /* ------ register router ------ */
+/* TODO: 1.Error Handling Error in the generateHash Function
+         2.Error Handling Incorrect Usage of the User Model:If there is an error in the `User.findOne` or `new User` processes, such as passing incorrect parameters, it could also result in a program crash.
+         3.Err log
+------ */
+
+
+
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
+        // ------ not using passwordSchema ------
         // if (!passwordSchema.validate(password)) {
         //     return res.status(400).json({ error: 'Password does not meet requirements.' });
         // }
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).json({ error: 'Username already exists.' });
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Bad Request', message: 'Username and password are required.' });
+        }
+        try {
+            existingUser = await User.findOne({ username });
+        } catch (error) {
+            return res.status(500).json({ error: 'Internal Server Error', message: 'Error finding existing user.' });
+        } if (existingUser) {
+            return res.status(400).json({ error: 'Bad Request', message: 'Username already exists.' });
         }
         const hashedPassword = await generateHash(password);
         const newUser = new User({ username, password: hashedPassword });
-        await newUser.save();
+        // Handle potential errors during newUser.save()
+        try {
+            await newUser.save();
+        } catch (error) {
+            return res.status(500).json({ error: 'Internal Server Error', message: 'Error saving new user.' });
+        }
         res.json({ message: 'Registration successful' });
     } catch (error) {
         console.error('Registration failed:', error);
-        res.status(500).json({ error: 'Registration failed' });
+        res.status(500).json({ error: 'Internal Server Error', message: 'Registration failed. Please try again later.' });
     }
 });
 
