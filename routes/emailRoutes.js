@@ -34,14 +34,14 @@ ${message}
     sgMail.send(msg)
         .then((response) => {
             console.log('Email sent successfully!');
-            res.status(200).send('Email sent successfully!');
-            console.log(response[0].statusCode)
-            console.log(response[0].headers)
-            console.log(response[0])
+            res.status(200).json({ message: 'Email sent successfully!' });
+            // console.log(response[0].statusCode)
+            // console.log(response[0].headers)
+            // console.log(response[0])
         })
         .catch((error) => {
             console.error('Error sending email:', error);
-            res.status(500).send('Error sending email.');
+            res.status(500).json({ message: 'Error sending email!' });
         });
 });
 

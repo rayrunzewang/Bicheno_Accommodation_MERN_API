@@ -2,24 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-    try {
-        console.log('req.session/check-session:', req.session);
-        console.log('req.session.passport.user/check-session:', req.session.passport.user);
+    // console.log('Session maxAge:', req.session.cookie.maxAge);
 
-        if (req.session.passport.user) {
-            res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Allowed Origin
-            res.header('Access-Control-Allow-Credentials', 'true'); // Allowing Credentials
-            res.header(
-                'Access-Control-Allow-Headers',
-                'Origin, X-Requested-With, Content-Type, Accept'
-            );
-            if (req.session.passport.user) {
-                res.json({ user: req.session.passport.user });
-            } else {
-                res.json({ user: null });
-            }
+    try {
+        console.log('req.session in check-session:', req.session);
+        // console.log('req.session.passport.user in check-session:', req.session.passport.user);
+
+        if (req.session && req.session.passport && req.session.passport.user) {
+            // req.session.cookie.maxAge = 5 * 1000;  
+            // req.session.touch()
+            res.header('Access-Control-Allow-Credentials', 'true');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            res.cookie('user_id', req.session.passport.user, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
+            res.json({ user: req.session.passport.user });
+            // req.session.passport.user = req.session.passport.user
         } else {
-            res.status(500).json({ error: 'Internal server error' });
+            res.json({ user: null });
         }
     } catch (error) {
         console.error('Error in /check-session:', error);
@@ -29,8 +27,6 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     try {
-
-        res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.header('Access-Control-Allow-Credentials', 'true');
         res.header(
             'Access-Control-Allow-Headers',

@@ -5,8 +5,7 @@ const { generateHash } = require('../utils/authUtils');
 const User = require('../models/User');
 const fs = require('fs');
 
-
-/*------ logLoginAttempt ------*/
+/*------ logLoginAttempt Log Function ------*/
 function logLoginAttempt(username, success, ipAddress, userAgent, errorMessage) {
     const logEntry = {
         timestamp: new Date().toISOString(),
@@ -31,11 +30,8 @@ function logLoginAttempt(username, success, ipAddress, userAgent, errorMessage) 
 /* ------ register router ------ */
 /* TODO: 1.Error Handling Error in the generateHash Function
          2.Error Handling Incorrect Usage of the User Model:If there is an error in the `User.findOne` or `new User` processes, such as passing incorrect parameters, it could also result in a program crash.
-         3.Err log
+         3.Err log, consider Winston
 ------ */
-
-
-
 router.post('/register', async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -75,27 +71,23 @@ router.post('/', (req, res, next) => {
             if (err) {
                 console.error('Login failed:', err);
                 logLoginAttempt('unknown', false, req.ip, req.get('user-agent'), err.message);
-                return res.status(500).json({ error: 'Login failed' });
+                return res.status(500).json({ error: 'Internal Server Error', message: 'Login failed'});
             }
             if (!user) {
                 logLoginAttempt('unknown', false, req.ip, req.get('user-agent'), 'Invalid username or password.');
-                return res.status(400).json({ error: 'Invalid username or password.' });
+                return res.status(400).json({ error: 'Bad Request', message: 'Invalid username or password.' });
             }
             req.session.user = user;
             req.login(user, (err) => {
                 if (err) {
                     console.error('Login failed:', err);
                     logLoginAttempt(user.username, false, req.ip, req.get('user-agent'), err.message);
-
-                    return res.status(500).json({ error: 'Login failed' });
+                    return res.status(500).json({  error: 'Internal Server Error', message:'Login failed' });
                 }
-                res.cookie('user_id', user._id, { maxAge: 5 * 60 * 1000, httpOnly: true, secure: false });
-                res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
-                // res.header('Access-Control-Allow-Credentials', 'true'); 
-                res.header(
-                    'Access-Control-Allow-Headers',
-                    'Origin, X-Requested-With, Content-Type, Accept'
-                );
+
+                console.log( 'user._id', user._id)
+                res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
+                
                 logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
 
                 return res.json({ message: 'Login successful', user: user });
@@ -120,13 +112,13 @@ router.put('/', async (req, res) => {
         // Find the user by username
         const user = await User.findOne({ username });
         if (!user) {
-            return res.status(400).json({ error: 'User not found.' });
+            return res.status(400).json({ error: 'Bad Request', message: 'User not found.' });
         }
 
         // Check if the old password matches
         const isPasswordValid = await user.validPassword(oldPassword);
         if (!isPasswordValid) {
-            return res.status(400).json({ error: 'Old password is incorrect.' });
+            return res.status(400).json({ error: 'Bad Request', message: 'Current password is incorrect.' });
         }
 
         // Generate and update the hashed password
@@ -140,7 +132,7 @@ router.put('/', async (req, res) => {
         res.json({ message: 'Password changed successfully' });
     } catch (error) {
         console.error('Password change failed:', error);
-        res.status(500).json({ error: 'Password change failed' });
+        res.status(500).json({ error: 'Internal Server Error', message: 'Password change failed' });
     }
 });
 

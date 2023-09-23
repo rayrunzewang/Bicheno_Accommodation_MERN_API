@@ -30,7 +30,7 @@ router.use((req, res, next) => {
 
 router.post('/', upload.array('file'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
-    return res.status(400).send('No File Chosen.');
+    return res.status(400).json({ error: 'Bad Request.', message: 'No File Chosen.' });
   }
 
   const uploadedFiles = req.files;
@@ -96,13 +96,13 @@ router.get('/', async (req, res) => {
     const files = await File.find();
 
     if (!files || files.length === 0) {
-      return res.status(404).json({ message: 'No documents found' });
+      return res.status(404).json({ error:'Document not found',  message: 'No documents found' });
     }
 
     res.json(files);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve documents' });
+    res.status(500).json({ error:'Internal server error', message: 'Failed to retrieve documents' });
   }
 });
 
@@ -112,31 +112,31 @@ router.get('/:id', async (req, res) => {
     const file = await File.findById(fileId);
 
     if (!file) {
-      return res.status(404).json({ message: 'Document not found' });
+      return res.status(404).json({ error:'Document not found', message: 'Document not found' });
     }
 
     res.json({ document: file });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve document' });
+    res.status(500).json({ error:'Internal server error', message: 'Failed to retrieve document' });
   }
 });
 
 router.put('/:id', upload.array('file'), async (req, res) => {
   const fileId = req.params.id;
-  console.log(req.files);
   try {
     const fileToUpdate = await File.findById(fileId);
 
     if (!fileToUpdate) {
-      return res.status(404).send('File not found.');
+      return res.status(404).json({ error: 'File not found.', message: 'File not found.' });
     }
 
     if (!req.files || req.files.length === 0) {
-      return res.status(400).send('No File Chosen.');
+      return res.status(400).json({ error: 'Bad Request', message: 'No File Chosen.' });
     }
 
     // Delete old images
+    // TODO: error handling
     for (const image of fileToUpdate.images) {
       const imagePath = image.image_url;
       fs.unlinkSync(imagePath);
@@ -204,7 +204,7 @@ router.put('/:id', upload.array('file'), async (req, res) => {
     res.json({ message: 'File updated successfully.', file: fileToUpdate });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'File update failed.' });
+    res.status(500).json({ error: 'Internal server error.', message: 'File update failed.' });
   }
 });
 
@@ -214,10 +214,11 @@ router.delete('/:id', async (req, res) => {
     const fileToDelete = await File.findById(fileId);
 
     if (!fileToDelete) {
-      return res.status(404).json({ error: 'file not found' });
+      return res.status(404).json({ error: 'File not found', message: 'File not found' });
     }
 
     // delete image
+    //TODO: error handling
     for (const image of fileToDelete.images) {
       const imagePath = image.image_url;
       fs.unlinkSync(imagePath);
@@ -225,10 +226,13 @@ router.delete('/:id', async (req, res) => {
 
     // delete data from database
     const result = await File.findByIdAndDelete(fileId);
+    if (!result) {
+      return res.status(500).json({ error: 'An error occured.', message: 'Failed to delete file.' });
+    }
     res.json(result);
   } catch (error) {
     console.error('Cannot Delete Files', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', message: 'Fail deleting property' });
   }
 });
 

@@ -1,4 +1,5 @@
 require('dotenv').config();
+const corsConfig = require('./config');
 const port = process.env.PORT || 3001;
 const sessionSecret = process.env.SESSION_SECRET;
 const express = require('express');
@@ -20,7 +21,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
   .catch(console.error);
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: corsConfig,
   credentials: true,
   allowedHeaders: ['Content-Type'], // this is needed for sending JSON
 }));
@@ -30,10 +31,11 @@ app.use(cookieParser());
 
 app.use(session({
   secret: sessionSecret,
+  rolling: true,
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 5 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: false
   },
