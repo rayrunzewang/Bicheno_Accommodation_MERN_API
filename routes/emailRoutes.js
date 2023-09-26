@@ -6,6 +6,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+// ------ Enquiry Email route and template ------
 router.post('/', (req, res) => {
     const { name, mobile, email, message } = req.body;
     const mobileInfo = mobile ? mobile : 'Not provided';
@@ -33,15 +34,11 @@ ${message}
 
     sgMail.send(msg)
         .then((response) => {
-            console.log('Email sent successfully!');
             res.status(200).json({ message: 'Email sent successfully!' });
-            // console.log(response[0].statusCode)
-            // console.log(response[0].headers)
-            // console.log(response[0])
         })
         .catch((error) => {
             console.error('Error sending email:', error);
-            res.status(500).json({ message: 'Error sending email!' });
+            res.status(500).json({error:'Internal server error', message: 'Error sending email!' });
         });
 });
 

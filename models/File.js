@@ -13,6 +13,10 @@ const fileSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    link: {
+        type: String,
+        required: true,
+    },
     bed: {
         type: Number,
         required: true,

@@ -44,6 +44,7 @@ router.post('/', upload.array('file'), async (req, res) => {
       bed: req.body.bed,
       toliet: req.body.toliet,
       carspace: req.body.carspace,
+      link: req.body.link,
     });
 
     let order = 1;
@@ -151,6 +152,7 @@ router.put('/:id', upload.array('file'), async (req, res) => {
     fileToUpdate.bed = req.body.bed;
     fileToUpdate.toliet = req.body.toliet;
     fileToUpdate.carspace = req.body.carspace;
+    fileToUpdate.link = req.body.link;
 
     let order = 1;
 
