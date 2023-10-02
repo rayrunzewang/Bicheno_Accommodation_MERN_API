@@ -77,7 +77,8 @@ router.post('/', (req, res, next) => {
                 logLoginAttempt('unknown', false, req.ip, req.get('user-agent'), 'Invalid username or password.');
                 return res.status(400).json({ error: 'Bad Request', message: 'Invalid username or password.' });
             }
-            req.session.user = user;
+            // req.session.user = user;
+            console.log('登陆后显示req.session.user:',req.session.user)
             req.login(user, (err) => {
                 if (err) {
                     console.error('Login failed:', err);
@@ -85,8 +86,8 @@ router.post('/', (req, res, next) => {
                     return res.status(500).json({  error: 'Internal Server Error', message:'Login failed' });
                 }
 
-                console.log( 'user._id', user._id)
-                res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
+                console.log( '登陆成功,user._id:', user._id)
+                res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: true ,sameSite: 'none'});
                 
                 logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
 

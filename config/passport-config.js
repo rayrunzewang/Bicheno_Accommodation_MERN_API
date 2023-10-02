@@ -21,6 +21,8 @@ passport.use('local-with-bcrypt', new LocalStrategy(
 
 passport.serializeUser(function(user, done) {
   console.log('serializeUser')
+  console.log('护照设置user:',user)
+  console.log('护照设置user.id:',user.id)
 
   done(null, user.id);
 });
