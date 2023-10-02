@@ -8,7 +8,7 @@ const corsOptions = {
     //         callback(new Error('Not allowed by CORS'))
     //     }
     // },
-    origin: "https://bicheno.com.au", 
+    origin: "https://bicheno-accommodation.onrender.com", 
     credentials: true,
     optionsSuccessStatus: 200,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
