@@ -1,9 +1,10 @@
 require('dotenv').config();
-const corsConfig = require('./config');
-const port = process.env.PORT || 3001;
+const corsOptions = require('./config/corsOptions');  
+const connectDB = require('./config/dbConn');
+const mongoose = require('mongoose');
+const port = process.env.PORT || 3500;
 const sessionSecret = process.env.SESSION_SECRET;
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -13,18 +14,15 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('connected to DB'))
-  .catch(console.error);
+connectDB();
+// mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true
+// })
+//   .then(() => console.log('connected to DB'))
+//   .catch(console.error);
 
-app.use(cors({
-  origin: corsConfig,
-  credentials: true,
-  allowedHeaders: ['Content-Type'], // this is needed for sending JSON
-}));
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -155,4 +153,11 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong on the server.' });
 });
 
-app.listen(port, () => console.log('Server started on port 3001'))
+mongoose.connection.once('open', () => {
+  console.log('Connected to MongoDB')
+  app.listen(port, () => console.log(`Server started on port ${port}`))
+})
+
+mongoose.connection.on('error', err => {
+  console.log(err)
+})
