@@ -11,7 +11,7 @@ const corsOptions = {
     credentials: true,
     optionsSuccessStatus: 200,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    allowedHeaders: ['Content-Type'] // this is needed for sending JSON
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']// this is needed for sending JSON
 };
 
 module.exports  = corsOptions;

@@ -13,7 +13,6 @@ const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
 
-
 connectDB();
 // mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
 //   useNewUrlParser: true,
@@ -145,7 +144,7 @@ app.use('/send-email', emailRoutes);
 // });
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'index.html'));
 });
 
 app.use((req, res, next) => {

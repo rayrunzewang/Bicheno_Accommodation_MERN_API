@@ -9,10 +9,9 @@ router.get('/', (req, res) => {
         // console.log('req.session.passport.user in check-session:', req.session.passport.user);
 
         if (req.session && req.session.passport && req.session.passport.user) {
-            // req.session.cookie.maxAge = 5 * 1000;  
-            // req.session.touch()
-            res.header('Access-Control-Allow-Credentials', 'true');
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            console.log('检查',req.session)
+            console.log('检查',req.session.passport)
+            console.log('检查',req.session.passport.user)
             res.cookie('user_id', req.session.passport.user, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
             res.json({ user: req.session.passport.user });
             // req.session.passport.user = req.session.passport.user
