@@ -35,7 +35,7 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: false,
-    sameSite: 'Lax'
+    sameSite: 'none', // 设置SameSite属性为"None"
   },
 }));
 

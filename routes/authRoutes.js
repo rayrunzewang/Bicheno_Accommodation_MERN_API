@@ -87,7 +87,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 console.log( '登陆成功,user._id:', user._id)
-                res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: true ,sameSite: 'none'});
+                res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false ,sameSite: 'Lax'});
                 
                 logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
 
