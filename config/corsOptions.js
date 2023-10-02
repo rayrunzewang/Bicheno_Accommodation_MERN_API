@@ -10,6 +10,7 @@ const corsOptions = {
     },
     credentials: true,
     optionsSuccessStatus: 200,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
     allowedHeaders: ['Content-Type'] // this is needed for sending JSON
 };
 
