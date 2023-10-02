@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
             console.log('检查',req.session)
             console.log('检查',req.session.passport)
             console.log('检查',req.session.passport.user)
-            res.cookie('user_id', req.session.passport.user, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
+            res.cookie('user_id', req.session.passport.user, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false, sameSite: 'None' });
             res.json({ user: req.session.passport.user });
             // req.session.passport.user = req.session.passport.user
         } else {
