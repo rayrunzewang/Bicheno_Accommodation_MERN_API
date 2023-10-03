@@ -20,7 +20,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-app.use(express.static('public'));
+const publicDirectoryPath = path.join(__dirname, '../uploads');
+
+app.use(express.static(publicDirectoryPath));
+// app.use(express.static('public'));
 
 router.post('/', upload.array('file'), async (req, res) => {
   if (!req.files || req.files.length === 0) {
