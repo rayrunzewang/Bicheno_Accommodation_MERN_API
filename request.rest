@@ -15,7 +15,7 @@ Content-Type: application/json
   "newPassword": "password"
 }
 ###
-GET http://localhost:3001/check-session
+GET https://www.bicheno.au/check-session
 Content-Type: application/json
 
 ###

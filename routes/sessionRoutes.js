@@ -20,8 +20,8 @@ router.get('/', (req, res) => {
             res.cookie('user_id', req.session.passport.user, {
                 maxAge: 24 * 60 * 60 * 1000,
                 httpOnly: true,
-                // sameSite: 'none',
-                // secure: true,
+                sameSite: 'none',
+                secure: true,
             });
         } else {
             res.json({ user: null });

@@ -97,8 +97,8 @@ router.post('/', (req, res, next) => {
                 }
 
                 res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true,             
-                // sameSite: 'none',
-                // secure: true,
+                sameSite: 'none',
+                secure: true,
             });
                 
                 logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
