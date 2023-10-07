@@ -10,11 +10,10 @@ router.get('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
+        res.header('Access-Control-Allow-Origin', ' http://localhost:3000');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
         console.log('session检查req.session:', req.session)
-        console.log('session检查req.user:', req.user)
 
 
         if (req.session && req.session.passport && req.session.passport.user) {
@@ -40,7 +39,7 @@ router.post('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
+        res.header('Access-Control-Allow-Origin', ' http://localhost:3000');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 

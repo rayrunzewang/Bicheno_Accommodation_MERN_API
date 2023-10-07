@@ -72,7 +72,7 @@ router.post('/', (req, res, next) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
+        res.header('Access-Control-Allow-Origin', ' http://localhost:3000');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
@@ -87,7 +87,8 @@ router.post('/', (req, res, next) => {
                 return res.status(400).json({ error: 'Bad Request', message: 'Invalid username or password.' });
             }
             req.session.user = user;
-            console.log('登陆后显示req.session.user:',req.session.user)
+    
+
             req.login(user, (err) => {
                 if (err) {
                     console.error('Login failed:', err);
@@ -95,13 +96,14 @@ router.post('/', (req, res, next) => {
                     return res.status(500).json({  error: 'Internal Server Error', message:'Login failed' });
                 }
 
-                console.log( '登陆成功,显示user._id:', user._id)
                 res.cookie('user_id', user._id, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true,             
                 sameSite: 'none',
                 secure: true,});
                 
                 logLoginAttempt(user.username, true, req.ip, req.get('user-agent'), '');
 
+                console.log( '登陆成功,显示user._id:', user._id)
+                console.log('登陆后显示req.session:',req.session)
                 return res.json({ message: 'Login successful', user: user });
             });
         })(req, res, next);
@@ -119,7 +121,7 @@ router.put('/', async (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
+        res.header('Access-Control-Allow-Origin', ' http://localhost:3000');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
