@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
         res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-
+        console.log('session检查:', req.session)
 
         if (req.session && req.session.passport && req.session.passport.user) {
             res.cookie('user_id', req.session.passport.user, {
