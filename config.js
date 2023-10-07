@@ -1,7 +1,7 @@
-// require('dotenv').config();  // Load environment variables from .env file
+require('dotenv').config();  // Load environment variables from .env file
 
-// const corsConfig = {
-//   allowedOrigins: process.env.ALLOWED_ORIGINS || '',  
-// };
+const corsConfig = {
+  allowedOrigins: process.env.ALLOWED_ORIGINS || '',  
+};
 
-// module.exports = corsConfig;
+module.exports = corsConfig;

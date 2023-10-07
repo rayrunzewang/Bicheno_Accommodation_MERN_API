@@ -1,5 +1,5 @@
 require('dotenv').config();
-const corsOptions = require('./config/corsOptions');  
+const corsOptions = require('./config/corsOptions');
 const connectDB = require('./config/dbConn');
 const mongoose = require('mongoose');
 const port = process.env.PORT || 3500;
@@ -11,20 +11,14 @@ const session = require('express-session');
 const passport = require('./config/passport-config')
 const app = express();
 const path = require('path');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 
 connectDB();
-// mongoose.connect('mongodb://127.0.0.1:27017/mern-todo', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true
-// })
-//   .then(() => console.log('connected to DB'))
-//   .catch(console.error);
 
 app.use(cors(corsOptions));
 
 app.use(express.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use(session({
   secret: sessionSecret,
@@ -35,7 +29,7 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000,
     httpOnly: true,
     secure: false,
-    sameSite: 'None', // 设置SameSite属性为"None"
+    // sameSite: 'None', 
   },
 }));
 
@@ -57,98 +51,11 @@ app.use('/posts', blogPostRoutes);
 app.use('/check-session', sessionRoutes);
 app.use('/logout', sessionRoutes);
 app.use('/property', imagesRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/property/propertycard', imagesRoutes);
+app.use('/property/alltitle', imagesRoutes);
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use('/send-email', emailRoutes);
-
-/* ------ deprecated: Method of generating PDF on the backend server using PDFkit and downloading. ------ */
-// app.post('/generate-pdf', (req, res) => {
-//   const { title, address, description, bed, toliet, carspace, images } = req.body;
-//   console.log(title, address, description, bed, toliet, carspace, images)
-
-//   // Create a new PDF document
-//   const doc = new PDFDocument({ size: 'A4' });
-
-//   // Set response headers for PDF
-//   res.setHeader('Content-Type', 'application/pdf');
-//   res.setHeader('Content-Disposition', 'attachment; filename="property_info.pdf"');
-//   console.log(images.map((image) => { return image.image_url }))
-//   // Pipe the PDF to the response
-//   doc.pipe(res);
-
-//   // Add property information and images to the PDF
-
-
-//   const maxContentWidth = 400
-//   const maxContentHeight = 650; // Maximum height for content
-//   const imageWidth = 100;
-//   const imageHeight = 100;
-//   const pageMargin = 95; // Margin for content
-//   const margin = 10; // Margin for content
-//   let x = margin;
-//   const y = 200 + margin;
-
-//   doc.fontSize(20).text(`${title}`
-//     , {
-//       align: 'center',
-//       width: maxContentWidth
-//     });
-
-//   doc.moveDown();
-//   doc.fontSize(12).text(`${address}`
-//     , {
-//       align: 'left',
-//       width: maxContentWidth
-//     });
-//   doc.fontSize(12).text(`bed:${bed}, toliet:${toliet}, carspace:${carspace}`
-//     , {
-//       // underline: true,
-//       align: 'left',
-//       width: maxContentWidth
-//     });
-
-//   doc.moveDown();
-//   doc.fontSize(12).text(`Contact:accommodation@bicheno.com.au`
-//   , {
-//     // underline: true,
-//     align: 'left',
-//     width: maxContentWidth
-//   });
-
-//   // for (const line of lines) {
-//   //   // Check if the line exceeds the maximum height
-//   //   if (y + 20 > maxContentHeight) {
-//   //     // Add a new page
-//   //     doc.addPage();
-//   //     y = margin; // Reset y position for new page
-//   //   }
-
-//   //   doc.text(line, x, y);
-//   //   y += 20; // Increment y position for the next line
-//   // }
-
-//   if (y + imageHeight > maxContentHeight) {
-//     doc.addPage(); // Add a new page if the image exceeds the maximum height
-//     y = margin; // Reset y position for new page
-//   }
-
-//   const imageURLs = images.map(image => image.image_url);
-//   imageURLs.forEach(url => {
-//     // 添加图片到 PDF
-//     doc.image(url, x, y, { width: imageWidth });
-//     x += imageWidth + 10;  // Add some padding between images
-//   });
-
-//   // Finalize the PDF
-//   doc.end();
-// });
-
-// app.use(express.static(path.join(__dirname, 'public_html')));
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public_html', 'index.html'));
-// });
 
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Route not found' });

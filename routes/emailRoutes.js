@@ -42,41 +42,4 @@ ${message}
         });
 });
 
-/* ------ deprecated:smtp way t osend email ------need to install nodemailer */
-// router.post('/', (req, res) => {
-//   const { name, mobile, email, message } = req.body;
-
-// let transporter = nodemailer.createTransport({
-//     host: 'smtp.sendgrid.net',
-//     port: 587,
-//     auth: {
-//         user: "apikey",
-//         pass: "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"
-//     }
-//  })
-
-//   const mailOptions = {
-//     from: "rayrunzewang@gmail.com",  // Use the sender's email provided in the form
-//     to: "baysidetechstudio@gmail.com",  // Replace with the recipient's email
-//     subject: "New Enquiry",
-//     text: `
-//       Name: ${name}
-//       Mobile: ${mobile}
-//       Email: ${email}
-//       Message: ${message}
-//     `
-//   };
-
-//   // Send the email
-//   transporter.sendMail(mailOptions, function(error, info) {
-//     if (error) {
-//       console.log("Error sending email:", error);
-//       res.status(500).send('Error sending email.');
-//     } else {
-//       console.log('Email sent:', info.response);
-//       res.status(200).send('Email sent successfully!');
-//     }
-//   });
-// });
-
 module.exports = router;

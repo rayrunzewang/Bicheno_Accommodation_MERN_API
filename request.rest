@@ -67,7 +67,7 @@ Content-Type: application/json
     "author": "Author-1"
 }
 ###
-GET http://localhost:3001/property/
+GET http://localhost:3001/property/allandcoverimage
 Content-Type: application/json
 ###
 GET http://localhost:3001/property/64fef21ea3e0b823be8550b4
