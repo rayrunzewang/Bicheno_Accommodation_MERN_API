@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'http://bicheno.au');
+        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
@@ -34,7 +34,7 @@ router.post('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'http://bicheno.au');
+        res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
         res.header('Access-Control-Max-Age', '600'); 
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
