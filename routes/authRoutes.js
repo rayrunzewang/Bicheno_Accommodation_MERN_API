@@ -67,6 +67,15 @@ router.post('/register', async (req, res) => {
 /* ------ login router ------ */
 router.post('/', (req, res, next) => {
     try {
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept'
+        );
+        res.header('Access-Control-Allow-Origin', 'http://bicheno.au');
+        res.header('Access-Control-Max-Age', '600');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
         passport.authenticate('local-with-bcrypt', (err, user, info) => {
             if (err) {
                 console.error('Login failed:', err);
@@ -103,6 +112,15 @@ router.post('/', (req, res, next) => {
 /* ------ Change Password Router ------ */
 router.put('/', async (req, res) => {
     try {
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header(
+            'Access-Control-Allow-Headers',
+            'Origin, X-Requested-With, Content-Type, Accept'
+        );
+        res.header('Access-Control-Allow-Origin', 'http://bicheno.au');
+        res.header('Access-Control-Max-Age', '600');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+
         const { username, oldPassword, newPassword } = req.body;
 
         // Check if the new password meets the requirements
