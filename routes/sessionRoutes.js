@@ -16,8 +16,12 @@ router.get('/', (req, res) => {
 
 
         if (req.session && req.session.passport && req.session.passport.user) {
-            res.cookie('user_id', req.session.passport.user, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, secure: false });
-            res.json({ user: req.session.passport.user });
+            res.cookie('user_id', req.session.passport.user, {
+                maxAge: 24 * 60 * 60 * 1000,
+                httpOnly: true,
+                sameSite: 'none',
+                secure: true,
+            });
         } else {
             res.json({ user: null });
         }
@@ -35,7 +39,7 @@ router.post('/', (req, res) => {
             'Origin, X-Requested-With, Content-Type, Accept'
         );
         res.header('Access-Control-Allow-Origin', 'https://bicheno.au');
-        res.header('Access-Control-Max-Age', '600'); 
+        res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
 
