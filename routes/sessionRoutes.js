@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://login-test-mtef.onrender.com/');
+        res.header('Access-Control-Allow-Origin', 'https://login-test-mtef.onrender.com');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
         console.log('session检查req.session:', req.session)
@@ -39,11 +39,9 @@ router.post('/', (req, res) => {
             'Access-Control-Allow-Headers',
             'Origin, X-Requested-With, Content-Type, Accept'
         );
-        res.header('Access-Control-Allow-Origin', 'https://login-test-mtef.onrender.com/');
+        res.header('Access-Control-Allow-Origin', 'https://login-test-mtef.onrender.com');
         res.header('Access-Control-Max-Age', '600');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-
-
 
         req.session.destroy();
         res.status(200).json({ message: 'Logout successfully' });
